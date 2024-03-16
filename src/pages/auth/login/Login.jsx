@@ -2,6 +2,7 @@ import {Field, Form, Formik} from "formik";
 import Alert from "../../../components/Alert.jsx";
 import {useNavigate} from "react-router-dom";
 import {useSignIn} from "react-auth-kit";
+import {Helmet} from "react-helmet";
 
 const Login = () => {
     const signIn = useSignIn()
@@ -22,18 +23,34 @@ const Login = () => {
         }
     }
 
-    return (
-        <Formik initialValues={{
-            username: "",
-            password: ""
-        }} onSubmit={handleForm}>
-            <Form autoComplete={"off"}>
-                <h1>Login</h1>
-                <Field type="text" name="username" placeholder="Username" required={true} autoFocus={true}/>
-                <Field type="password" name="password" placeholder="Password" required={true}/>
-                <button type="submit">Login</button>
-            </Form>
-        </Formik>
+    return (<>
+            <Helmet>
+                <title>Login</title>
+            </Helmet>
+            <div className={"card"}>
+                <div className="card-body">
+                    <Formik initialValues={{
+                        username: "",
+                        password: ""
+                    }} onSubmit={handleForm}>
+                        <Form autoComplete={"off"}>
+                            <div className="mb-3">
+                                <label className="form-label">Username</label>
+                                <Field type="text" name="username" className="form-control" required={"true"}
+                                       autoFocus={"true"}/>
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Password</label>
+                                <Field type="password" name="password" className="form-control" required={"true"}/>
+                            </div>
+                            <button type="submit" className="btn btn-primary"><i
+                                className="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </Form>
+                    </Formik>
+                </div>
+            </div>
+        </>
     )
 }
 

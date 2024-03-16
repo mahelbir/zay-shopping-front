@@ -6,7 +6,8 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 
 
 const Login = Loadable("pages/auth/login/Login")
-const Account = Loadable("pages/auth/account/Account")
+const Account = Loadable("pages/account/Account")
+const Orders = Loadable("pages/orders/Orders")
 
 const router = createBrowserRouter([
     {
@@ -15,6 +16,33 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <h1>Home</h1>
+            },
+            {
+                path: "/",
+                element: <PrivateRoute/>,
+                children: [
+                    {
+                        path: "cart",
+                        element: <h1>Cart</h1>
+                    },
+                    {
+                        path: "account",
+                        element: <Account/>
+                    },
+                    {
+                        path: "orders",
+                        children: [
+                            {
+                                path: "",
+                                element: <Orders/>
+                            },
+                            {
+                                path: "new",
+                                element: <h1>New Order</h1>
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 path: "auth",
@@ -26,24 +54,6 @@ const router = createBrowserRouter([
                     {
                         path: "register",
                         element: <h1>Register</h1>
-                    },
-                    {
-                        path: "account",
-                        element: <PrivateRoute><Account/></PrivateRoute>
-                    },
-                ]
-            },
-            {
-                path: "orders",
-                element: <PrivateRoute/>,
-                children: [
-                    {
-                        path: "",
-                        element: <h1>Orders</h1>
-                    },
-                    {
-                        path: "new",
-                        element: <h1>New Order</h1>
                     }
                 ]
             },
