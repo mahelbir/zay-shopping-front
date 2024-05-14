@@ -2,11 +2,14 @@ import {createBrowserRouter} from "react-router-dom";
 import Alert from "./components/Alert.jsx";
 import Layout from "./components/Layout.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import Product from "./pages/products/Product.jsx";
 import Account from "./pages/account/Account.jsx";
-import Orders from "./pages/orders/Orders.jsx";
 import Login from "./pages/auth/login/Login.jsx";
-import ProductList from "./pages/products/ProductList.jsx";
+import Products from "./pages/products/Products.jsx";
+import Product from "./pages/product/Product.jsx";
+import Cart from "./pages/cart/Cart.jsx";
+import Orders from "./pages/orders/Orders.jsx";
+import Order from "./pages/order/Order.jsx";
+import Register from "./pages/auth/register/Register.jsx";
 
 const router = createBrowserRouter([
     {
@@ -14,47 +17,15 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <ProductList/>
+                element: <Products/>
             },
             {
-                path: "/",
-                element: <PrivateRoute/>,
-                children: [
-                    {
-                        path: "cart",
-                        element: <h1>Cart</h1>
-                    },
-                    {
-                        path: "account",
-                        element: <Account/>
-                    },
-                    {
-                        path: "orders",
-                        children: [
-                            {
-                                path: "",
-                                element: <Orders/>
-                            },
-                            {
-                                path: "new",
-                                element: <h1>New Order</h1>
-                            }
-                        ]
-                    },
-                    {
-                        path: "products",
-                        children: [
-                            {
-                                path: "list",
-                                element: <ProductList/>
-                            },
-                            {
-                                path: ":productId",
-                                element: <Product/>
-                            }
-                        ]
-                    }
-                ]
+                path: "/products",
+                element: <Products/>
+            },
+            {
+                path: "/product/:productId",
+                element: <Product/>
             },
             {
                 path: "auth",
@@ -65,8 +36,30 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "register",
-                        element: <h1>Register</h1>
+                        element: <Register/>
                     }
+                ]
+            },
+            {
+                path: "/",
+                element: <PrivateRoute/>,
+                children: [
+                    {
+                        path: "account",
+                        element: <Account/>
+                    },
+                    {
+                        path: "cart",
+                        element: <Cart/>
+                    },
+                    {
+                        path: "orders",
+                        element: <Orders/>
+                    },
+                    {
+                        path: "order/:orderId",
+                        element: <Order/>
+                    },
                 ]
             },
             {

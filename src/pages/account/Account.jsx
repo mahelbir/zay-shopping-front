@@ -6,7 +6,6 @@ import httpClient from "../../utils/httpClient.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import Alert from "../../components/Alert.jsx";
 import {useEffect, useState} from "react";
-import {failureMessage} from "../../utils/helper.js";
 
 
 const Account = () => {
@@ -16,32 +15,46 @@ const Account = () => {
     const [message, setMessage] = useState("")
     let [user, setUser] = useState(userState());
 
+    const updateStorage = (data) => {
+        localStorage.setItem("_auth_state", JSON.stringify(data))
+    }
+
     const logout = () => {
         signOut()
         navigate("/auth/login")
     }
 
     const {isSuccess, data: fetchedData} = useQuery({
-        queryKey: ['JobList'],
+        queryKey: ['account', user.id],
         queryFn: async () => {
             return await httpClient(`/customers/${user.id}`)
         }
     })
     useEffect(() => {
-        isSuccess && setUser(fetchedData)
+        if (isSuccess) {
+            setUser(fetchedData)
+            updateStorage(fetchedData)
+        }
     }, [isSuccess]);
 
     const mutation = useMutation({
         mutationKey: ['updateCustomer'],
         mutationFn: async (data) => {
-            return await httpClient(`/customers/${userState().id}`, "PUT", data)
+            return await httpClient(`/customers/${user.id}`, "PUT", data)
         }
     })
     const {isPending, mutate} = mutation
     const handleForm = (data) => {
         mutate(data, {
             onSuccess: (data) => {
-                localStorage.setItem("_auth_state", JSON.stringify(data))
+                updateStorage({
+                    id: data.customerId,
+                    email: data.email,
+                    status: data.status,
+                    address: data.address,
+                    name: data.name,
+                    surname: data.surname
+                })
                 setMessage("Successfully updated!")
             },
             onError: (e) => {
@@ -62,7 +75,7 @@ const Account = () => {
                     <Formik initialValues={{
                         name: user.name,
                         surname: user.surname,
-                        password: user.password,
+                        password: "",
                         email: user.email,
                         address: user.address
                     }} onSubmit={handleForm}>

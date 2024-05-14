@@ -4,8 +4,10 @@ import {useState} from "react";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import httpClient from "../../utils/httpClient.js";
 import Alert from "../../components/Alert.jsx";
+import {useAuthUser} from "react-auth-kit";
 
 const Product = () => {
+    const user = useAuthUser();
     const navigate = useNavigate();
     const {productId} = useParams();
     const [cartQuantity, setCartQuantity] = useState(1);
@@ -26,7 +28,10 @@ const Product = () => {
     })
     const {isPending, mutate} = mutation
     const handleCart = () => {
+        if (!user()?.id)
+            return navigate("/auth/login")
         mutate({
+            customerId: user().id,
             productId: product.id,
             quantity: cartQuantity
         }, {
@@ -40,7 +45,7 @@ const Product = () => {
         })
     }
 
-    const {error, data: product} = useQuery({
+    const {error, data: product, failureReason} = useQuery({
         queryKey: ['products', productId],
         queryFn: async () => {
             return await httpClient(`/products/${productId}`)
@@ -53,8 +58,11 @@ const Product = () => {
             <Helmet>
                 <title>{product?.name}</title>
             </Helmet>
-            <Alert type="error" enabled={error}>test</Alert>
-            {product && (
+            <Alert type="error" enabled={error}>{failureReason?.message}</Alert>
+            {
+                product && product.numberInStock < 1 && <Alert type="error" className="h5">No stock!</Alert>
+            }
+            {product && product.numberInStock >= 1 && (
                 <div className="row">
                     <div className="col-lg-5 mt-5">
                         <div className="card mb-3">

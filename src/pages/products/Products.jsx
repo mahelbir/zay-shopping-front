@@ -7,18 +7,18 @@ import {NavLink, useSearchParams} from "react-router-dom";
 const Product = () => {
 
     const [searchParams,] = useSearchParams();
-    const categoryId = searchParams.get('categoryId')
+    const categoryName = searchParams.get('category')
 
     const {error, failureReason, data: products} = useQuery({
-        queryKey: ['products'],
+        queryKey: ['products', categoryName],
         queryFn: async () => {
-            const category = categoryId ? `?category=${categoryId}` : ''
+            const category = categoryName ? `?category=${categoryName}` : ''
             return await httpClient(`/products` + category)
         }
     })
 
     const {data: categories} = useQuery({
-        queryKey: ['categories', categoryId],
+        queryKey: ['categories', categoryName],
         queryFn: async () => {
             return await httpClient(`/category`)
         }
@@ -37,7 +37,7 @@ const Product = () => {
                         {
                             categories?.map(category => (
                                 <li key={category.id} className="pb-3">
-                                    <NavLink to={`/products/list?categoryId=${category.id}&categoryName=${category.name}`}
+                                    <NavLink to={`/products?category=${category.name}`}
                                              className="h5 text-decoration-none">{category.name}</NavLink>
                                 </li>
                             ))
@@ -46,15 +46,15 @@ const Product = () => {
                 </div>
                 <div className="col-lg-9">
                     <div className="row">
-                        <h1 className="h2 pb-4">{categoryId ? searchParams.get("categoryName") : "All"}</h1>
+                        <h1 className="h2 pb-4">{categoryName ? categoryName : "All"}</h1>
                     </div>
                     <div className="row">
                         {
-                            products && products.map(product => (
+                            products && products.filter(product => product.numberInStock >= 1).map(product => (
                                 <div className="col-md-4" key={product.id}>
                                     <div className="card mb-4 product-wap rounded-0">
                                         <div className="card rounded-0">
-                                            <NavLink className="h3 text-decoration-none" to={`/products/${product.id}`}>
+                                            <NavLink className="h3 text-decoration-none" to={`/product/${product.id}`}>
                                                 <img className="card-img rounded-0 img-fluid"
                                                      src={product.image}
                                                      alt={product.name}/>
@@ -62,7 +62,7 @@ const Product = () => {
                                         </div>
                                         <div className="card-body text-center">
                                             <NavLink className="h3 text-decoration-none"
-                                                     to={`/products/${product.id}`}>
+                                                     to={`/product/${product.id}`}>
                                                 {product.name}
                                             </NavLink>
                                             <p className="text-center mb-0">${product.price}</p>

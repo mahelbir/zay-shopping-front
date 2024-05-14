@@ -16,16 +16,19 @@ const httpClient = async (endpoint, method = "GET", body = null) => {
             data: body,
             headers
         })
-        if (res.data.status !== 200) {
-            throw new Error(res.data.message)
+        if (res.data.status >= 400) {
+            throw Error(res.data.message)
         }
         return res.data.data;
     } catch (e) {
         if (e?.response?.status === 401) {
-            localStorage.removeItem("_auth");
-            location.reload();
+            if (authToken) {
+                localStorage.removeItem("_auth");
+                location.reload();
+            }
+            throw Error("You need to be logged in to access this resource")
         } else if (e?.response?.status === 403) {
-            throw new Error("You do not have permission to access this resource")
+            throw Error("You do not have permission to access this resource")
         } else if (e?.response?.status) {
             throw {
                 message: e.response.data.message,

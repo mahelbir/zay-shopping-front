@@ -50,7 +50,7 @@ const Layout = () => {
                                     </NavLink>
                                 )}
                                 <NavLink className="nav-icon position-relative text-decoration-none" to={"/cart"}>
-                                    <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
+                                    <i className="fa fa-fw fa-shopping-cart text-dark mr-1"></i>
                                 </NavLink>
                             </div>
                         </div>
