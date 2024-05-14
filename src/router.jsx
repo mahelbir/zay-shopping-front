@@ -1,13 +1,12 @@
 import {createBrowserRouter} from "react-router-dom";
 import Alert from "./components/Alert.jsx";
 import Layout from "./components/Layout.jsx";
-import Loadable from "./components/Loadable.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-
-
-const Login = Loadable("pages/auth/login/Login")
-const Account = Loadable("pages/account/Account")
-const Orders = Loadable("pages/orders/Orders")
+import Product from "./pages/products/Product.jsx";
+import Account from "./pages/account/Account.jsx";
+import Orders from "./pages/orders/Orders.jsx";
+import Login from "./pages/auth/login/Login.jsx";
+import ProductList from "./pages/products/ProductList.jsx";
 
 const router = createBrowserRouter([
     {
@@ -15,7 +14,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <h1>Home</h1>
+                element: <ProductList/>
             },
             {
                 path: "/",
@@ -39,6 +38,19 @@ const router = createBrowserRouter([
                             {
                                 path: "new",
                                 element: <h1>New Order</h1>
+                            }
+                        ]
+                    },
+                    {
+                        path: "products",
+                        children: [
+                            {
+                                path: "list",
+                                element: <ProductList/>
+                            },
+                            {
+                                path: ":productId",
+                                element: <Product/>
                             }
                         ]
                     }

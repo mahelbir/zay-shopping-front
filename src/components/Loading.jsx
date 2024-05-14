@@ -7,7 +7,7 @@ TopBarProgress.config({
         "0.5": "#0847a3",
         "1.0": "#042556"
     },
-    shadowColor: "#ddd",
+    shadowColor: "#212934",
     shadowBlur: 3
 });
 export const TopLoading = ({enabled}) => enabled && <TopBarProgress/>

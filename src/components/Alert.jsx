@@ -30,10 +30,9 @@ const Alert = ({type = "info", enabled = true, extra, children, className}) => {
                         <i className={classNames([
                             'fas',
                             `fa-${icon}`
-                        ])}/>
+                        ])}/>&nbsp;
                         {children}
                     </div>
-
                     {
                         extra && (
                             <div id={"extraData"} style={{display: "none"}}>

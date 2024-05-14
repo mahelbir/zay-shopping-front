@@ -15,6 +15,7 @@ const PrivateRoute = ({fallbackPath = "/auth/login", children}) => {
     } else {
         return <></>
     }
+
 }
 
 export default PrivateRoute

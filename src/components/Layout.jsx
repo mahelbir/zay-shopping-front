@@ -1,6 +1,6 @@
 import {NavLink, Outlet} from "react-router-dom";
 import {useIsAuthenticated} from "react-auth-kit";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
 const Layout = () => {
 
@@ -9,14 +9,14 @@ const Layout = () => {
     return (
         <>
             <Helmet>
-                <title>OTS</title>
+                <title>{ import.meta.env.VITE_NAME }</title>
             </Helmet>
             <div className="d-flex flex-column min-vh-100">
                 <nav className="navbar navbar-expand-lg navbar-light shadow">
                     <div className="container d-flex justify-content-between align-items-center">
-                        <a className="navbar-brand text-success logo h1 align-self-center" href="#">
-                            OTS
-                        </a>
+                        <NavLink className="navbar-brand text-success logo h1 align-self-center" to="/">
+                            { import.meta.env.VITE_NAME }
+                        </NavLink>
                         <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +28,7 @@ const Layout = () => {
                             <div className="flex-fill">
                                 <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                                     <li className="nav-item">
-                                        <NavLink className="nav-link" to={"/"}>Home</NavLink>
+                                        <NavLink className="nav-link" to={"/"}>Products</NavLink>
                                     </li>
                                     {isLoggedIn() && (
                                         <li className="nav-item">
@@ -51,8 +51,6 @@ const Layout = () => {
                                 )}
                                 <NavLink className="nav-icon position-relative text-decoration-none" to={"/cart"}>
                                     <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                                    <span
-                                        className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
                                 </NavLink>
                             </div>
                         </div>
@@ -64,7 +62,7 @@ const Layout = () => {
 
                 <footer className="bg-dark text-lg-start text-light mt-auto">
                     <div className="container p-2 text-center">
-                        <span>Copyright &copy; 2024 OTS</span>
+                        <span>Copyright &copy; 2024 { import.meta.env.VITE_NAME }</span>
                     </div>
                 </footer>
             </div>
