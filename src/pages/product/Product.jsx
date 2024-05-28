@@ -80,6 +80,9 @@ const Product = () => {
 
                                 <h6 className={"text-muted"}>Description:</h6>
                                 <p>{product.description}</p>
+
+                                <h6 className={"text-muted"}>In Stock:</h6>
+                                <p>{product.numberInStock}</p>
                                 <input type="hidden" name="product-title" value="Activewear"/>
                                 <div className="row">
                                     <div className="col-auto">

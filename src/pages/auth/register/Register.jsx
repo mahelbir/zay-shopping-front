@@ -25,7 +25,7 @@ const Register = () => {
             onError: () => {
                 setTimeout(() => {
                     mutation.reset()
-                } ,2500)
+                }, 2500)
             }
         })
     }
@@ -55,8 +55,7 @@ const Register = () => {
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Email</label>
-                                <Field type="email" name="email" className="form-control" required={true}
-                                       autoFocus={true}/>
+                                <Field type="email" name="email" className="form-control" required={true}/>
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Password</label>
@@ -64,7 +63,8 @@ const Register = () => {
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Address</label>
-                                <Field as={"textarea"} type="text" name="address" className="form-control" required={true}/>
+                                <Field as={"textarea"} type="text" name="address" className="form-control"
+                                       required={true}/>
                             </div>
                             <button type="submit" className="btn btn-primary" disabled={isPending}><i
                                 className="fas fa-user-plus"></i> Register

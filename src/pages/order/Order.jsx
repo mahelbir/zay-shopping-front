@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import httpClient from "../../utils/httpClient.js";
 import Alert from "../../components/Alert.jsx";
+import {useAuthUser} from "react-auth-kit";
 
 const Order = () => {
     const navigate = useNavigate();
@@ -14,26 +15,24 @@ const Order = () => {
             return await httpClient(`/order/track/${orderId}`)
         }
     })
-
-    const mutation = useMutation({
-        mutationKey: [],
-        mutationFn: async (data) => {
-            return await httpClient(`/order/${orderId}`, "PUT", data)
+    const deleteOrderMut = useMutation({
+        mutationKey: ['orders', orderId, 'delete'],
+        mutationFn: async () => {
+            return await httpClient(`/order/cancel/${orderId}`, "DELETE")
         }
     })
-    const {isPending, mutate} = mutation
-    const cancelOrder = () => {
-        const orderPrevStatus = order.status;
-        order.status = "CANCELLED"
-        mutate(order, {
-            onSuccess: () => {
-            },
-            onError: (e) => {
-                order.status = orderPrevStatus
-                alert(e.message)
-                mutation.reset()
-            }
-        })
+    const deleteOrder = () => {
+        if (window.confirm("Are you sure you want to delete this order?")) {
+            deleteOrderMut.mutate(null, {
+                onSuccess: () => {
+                    navigate("/orders")
+                },
+                onError: (e) => {
+                    alert(e.message)
+                    deleteOrderMut.reset()
+                }
+            })
+        }
     }
 
 
@@ -66,8 +65,9 @@ const Order = () => {
                             </button>
                             &nbsp;
                             {order.status !== "CANCELLED" &&
-                                <button className={"btn btn-danger"} onClick={cancelOrder} disabled={isPending}><i
-                                    className="fas fa-ban"></i> Cancel The Order</button>}
+                                <button className={"btn btn-danger"} onClick={deleteOrder} disabled={deleteOrderMut.isPending}>
+                                    <i className="fas fa-ban"></i> Cancel The Order</button>}
+                            &nbsp;
                         </div>
                     </div>
                 )

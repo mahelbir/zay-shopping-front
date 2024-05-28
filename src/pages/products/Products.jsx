@@ -3,17 +3,36 @@ import {useQuery} from "@tanstack/react-query";
 import httpClient from "../../utils/httpClient.js";
 import Alert from "../../components/Alert.jsx";
 import {NavLink, useSearchParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 const Product = () => {
 
-    const [searchParams,] = useSearchParams();
+    const [searchParams,] = useSearchParams()
     const categoryName = searchParams.get('category')
+    const [minPrice, setMinPrice] = useState("0")
+    const [maxPrice, setMaxPrice] = useState("0")
 
-    const {error, failureReason, data: products} = useQuery({
+    useEffect(() => {
+        const _ = setTimeout(() => {
+            refetch().then()
+        }, 350)
+
+        return () => clearTimeout(_)
+    }, [minPrice, maxPrice])
+
+
+    const {error, failureReason, data: products, refetch} = useQuery({
         queryKey: ['products', categoryName],
         queryFn: async () => {
-            const category = categoryName ? `?category=${categoryName}` : ''
-            return await httpClient(`/products` + category)
+            let endpoint = '/products'
+            let params = new URLSearchParams("");
+            categoryName && params.append('category', categoryName);
+            +minPrice > 0 && params.append('minPrice', minPrice);
+            +maxPrice > 0 && params.append('maxPrice', maxPrice);
+            if (params.size > 0) {
+                endpoint += '/category?' + params.toString()
+            }
+            return await httpClient(endpoint)
         }
     })
 
@@ -32,7 +51,7 @@ const Product = () => {
             <Alert type="error" enabled={error}>{failureReason?.message}</Alert>
             <div className="row">
                 <div className="col-lg-3">
-                    <h1 className="h2 pb-4">Categories</h1>
+                    <h1 className="h2">Categories</h1>
                     <ul className="list-unstyled templatemo-accordion">
                         {
                             categories?.map(category => (
@@ -43,6 +62,17 @@ const Product = () => {
                             ))
                         }
                     </ul>
+                    <h1 className="h2">Price</h1>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <input type="numer" className={"form-control"} min={"0"} placeholder={"Min"}
+                                   onChange={(event) => setMinPrice(event.target.value)}/>
+                        </div>
+                        <div className="col-md-6">
+                            <input type="numer" className={"form-control"} min={"0"} placeholder={"Max"}
+                                   onChange={(event) => setMaxPrice(event.target.value)}/>
+                        </div>
+                    </div>
                 </div>
                 <div className="col-lg-9">
                     <div className="row">
